@@ -1,10 +1,4 @@
 {
-    "rewrites": [
-        {
-            "destination": "/index.html",
-            "source": "/(.*)"
-        }
-    ],
     "routes": [
         {
             "handle": "filesystem"
