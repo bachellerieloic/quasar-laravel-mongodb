@@ -19,7 +19,11 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['http://localhost:9000', 'http://localhost:8080'],
+    'allowed_origins' => [
+        'http://localhost:9000',
+        'http://localhost:8080',
+        'https://quasar-laravel-mongodb.vercel.app'
+    ],
 
     'allowed_origins_patterns' => [],
 
