@@ -34,16 +34,13 @@ return [
         'mongodb' => [
             'driver' => 'mongodb',
             'dsn' => env('MONGODB_URI'),
-            'database' => env('DB_DATABASE', 'todo-app'),
-            // Alternative individual settings (used if dsn is not provided)
-            // 'host' => env('DB_HOST', '127.0.0.1'),
-            // 'port' => env('DB_PORT', 27017),
-            // 'database' => env('DB_DATABASE', 'todo-app'),
-            // 'username' => env('DB_USERNAME'),
-            // 'password' => env('DB_PASSWORD'),
-            // 'options' => [
-            //     'appName' => env('APP_NAME', 'Laravel'),
-            // ],
+            'database' => env('MONGODB_DATABASE', 'todo-app'),
+            'options' => [
+                'appName' => env('APP_NAME', 'Laravel'),
+                'tls' => true,
+                'tlsAllowInvalidCertificates' => true,
+                'tlsAllowInvalidHostnames' => true,
+            ],
         ],
 
         'sqlite' => [

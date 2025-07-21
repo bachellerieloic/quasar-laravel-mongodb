@@ -61,8 +61,8 @@ function openDialog() {
     dialog.value = true;
 }
 
-function saveTodo() {
-    todoStore.editTodo(props.todo.id, editContent.value);
+async function saveTodo() {
+    await todoStore.editTodo(props.todo.id, editContent.value);
     dialog.value = false;
 }
 </script>

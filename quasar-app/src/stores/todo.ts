@@ -1,38 +1,61 @@
 import { defineStore, acceptHMRUpdate } from 'pinia';
 import type { Todo } from 'components/models';
+import { api } from 'boot/axios';
 
 export const useTodoStore = defineStore('todo', {
   state: () => ({
-    todos: [
-      { id: 1, content: 'ct1', completed: false },
-      { id: 2, content: 'ct2', completed: false },
-      { id: 3, content: 'ct3', completed: false },
-      { id: 4, content: 'ct4', completed: false },
-      { id: 5, content: 'ct5', completed: false },
-    ] as Todo[],
+    todos: [] as Todo[],
   }),
   getters: {
     todoActive: (state) => state.todos.filter((todo) => !todo.completed),
     todoCompleted: (state) => state.todos.filter((todo) => todo.completed),
   },
   actions: {
-    addTodo(todo: Todo) {
-      this.todos.push(todo);
-    },
-    editTodo(id: number, content: string) {
-      const todo = this.todos.find((todo) => todo.id === id);
-      if (todo) {
-        todo.content = content;
+    async fetchTodos() {
+      try {
+        const response = await api.get('/todos');
+        this.todos = response.data;
+      } catch (error) {
+        console.error('Error fetching todos:', error);
       }
     },
-    updateCompleted(id: number, completed: boolean) {
-      const todo = this.todos.find((todo) => todo.id === id);
-      if (todo) {
-        todo.completed = completed;
+    async addTodo(content: string) {
+      try {
+        const response = await api.post('/todos', { content });
+        this.todos.push(response.data);
+      } catch (error) {
+        console.error('Error adding todo:', error);
       }
     },
-    deleteTodo(id: number) {
-      this.todos = this.todos.filter((todo) => todo.id !== id);
+    async editTodo(id: number, content: string) {
+      try {
+        const response = await api.put(`/todos/${id}`, { content });
+        const index = this.todos.findIndex((todo) => todo.id === id);
+        if (index !== -1) {
+          this.todos[index] = response.data;
+        }
+      } catch (error) {
+        console.error('Error editing todo:', error);
+      }
+    },
+    async updateCompleted(id: number, completed: boolean) {
+      try {
+        const response = await api.patch(`/todos/${id}/completed`, { completed });
+        const index = this.todos.findIndex((todo) => todo.id === id);
+        if (index !== -1) {
+          this.todos[index] = response.data;
+        }
+      } catch (error) {
+        console.error('Error updating todo status:', error);
+      }
+    },
+    async deleteTodo(id: number) {
+      try {
+        await api.delete(`/todos/${id}`);
+        this.todos = this.todos.filter((todo) => todo.id !== id);
+      } catch (error) {
+        console.error('Error deleting todo:', error);
+      }
     },
   },
 });

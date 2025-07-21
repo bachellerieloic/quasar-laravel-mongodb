@@ -38,7 +38,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useTodoStore } from 'src/stores/todo';
 import { storeToRefs } from 'pinia';
 import TodoItem from './TodoItem.vue';
@@ -49,14 +49,16 @@ const todoStore = useTodoStore();
 const dialog = ref<boolean>(false);
 const newTodo = ref<string>('');
 
-const saveTodo = () => {
-  todoStore.addTodo({
-    id: todoStore.todos.length + 1,
-    content: newTodo.value,
-    completed: false,
-  });
-  dialog.value = false;
-  newTodo.value = '';
+onMounted(async () => {
+  await todoStore.fetchTodos();
+});
+
+const saveTodo = async () => {
+  if (newTodo.value.trim()) {
+    await todoStore.addTodo(newTodo.value);
+    dialog.value = false;
+    newTodo.value = '';
+  }
 };
 </script>
 
